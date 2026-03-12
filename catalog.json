@@ -26,8 +26,7 @@
   {
     "name": "az-scout-plugin-odcr-coverage",
     "description": "ODCR coverage analysis — identify VMs at risk of allocation failure.",
-    "source": "github",
-    "url": "https://github.com/az-scout/az-scout-plugin-odcr-coverage",
+    "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-odcr-coverage",
     "author": "lrivallain",
     "tags": ["odcr", "capacity-reservation", "vm"]
