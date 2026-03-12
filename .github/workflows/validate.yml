@@ -1,0 +1,50 @@
+name: Validate Catalog
+
+on:
+  push:
+    branches: [main]
+    paths: [catalog.json]
+  pull_request:
+    paths: [catalog.json]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON syntax
+        run: python3 -c "import json; json.load(open('catalog.json')); print('✅ JSON valid')"
+
+      - name: Validate schema
+        run: |
+          python3 -c "
+          import json, sys
+          catalog = json.load(open('catalog.json'))
+          assert isinstance(catalog, list), 'catalog must be an array'
+          names = []
+          for i, entry in enumerate(catalog):
+              assert 'name' in entry, f'entry {i}: missing name'
+              assert 'description' in entry, f'entry {i}: missing description'
+              assert 'source' in entry, f'entry {i}: missing source'
+              assert entry['source'] in ('pypi', 'github'), f'entry {i}: invalid source'
+              if entry['source'] == 'github':
+                  assert 'url' in entry, f'entry {i}: github source requires url'
+              assert 'repository' in entry, f'entry {i}: missing repository'
+              assert 'author' in entry, f'entry {i}: missing author'
+              assert 'tags' in entry and isinstance(entry['tags'], list), f'entry {i}: missing/invalid tags'
+              names.append(entry['name'])
+          assert names == sorted(names), 'entries must be alphabetically sorted by name'
+          print(f'✅ Schema valid ({len(catalog)} plugins)')
+          "
+
+      - name: Check for duplicate names
+        run: |
+          python3 -c "
+          import json
+          catalog = json.load(open('catalog.json'))
+          names = [e['name'] for e in catalog]
+          dupes = [n for n in names if names.count(n) > 1]
+          assert not dupes, f'Duplicate names: {set(dupes)}'
+          print('✅ No duplicates')
+          "
