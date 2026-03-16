@@ -4,7 +4,7 @@
     "description": "Azure VMware Solution (AVS) SKU exploration.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-avs-sku",
-    "author": "lrivallain",
+    "authors": ["lrivallain"],
     "tags": ["avs", "vmware", "sku"]
   },
   {
@@ -12,7 +12,7 @@
     "description": "Batch SKU availability checker across multiple regions.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-batch-sku",
-    "author": "lrivallain",
+    "authors": ["lrivallain"],
     "tags": ["batch", "sku"]
   },
   {
@@ -20,7 +20,7 @@
     "description": "Inter-region latency statistics with D3.js graph visualisation.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-latency-stats",
-    "author": "lrivallain",
+    "authors": ["lrivallain"],
     "tags": ["latency", "network", "regions"]
   },
   {
@@ -28,7 +28,7 @@
     "description": "ODCR coverage analysis — identify VMs at risk of allocation failure.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-odcr-coverage",
-    "author": "lrivallain",
+    "authors": ["lrivallain"],
     "tags": ["odcr", "capacity-reservation", "vm"]
   },
   {
@@ -36,15 +36,15 @@
     "description": "Find the cheapest Azure regions for a given VM SKU.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-regions-cheapest",
-    "author": "lrivallain",
-    "tags": ["pricing", "regions", "cost"]
+    "authors": ["rsabile"],
+    "tags": ["pricing", "regions", "cost", "WIP"]
   },
   {
     "name": "az-scout-plugin-strategy-advisor",
     "description": "Multi-region capacity strategy recommendation engine.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-strategy-advisor",
-    "author": "lrivallain",
-    "tags": ["strategy", "capacity", "ai"]
+    "authors": ["rsabile", "lrivallain"],
+    "tags": ["strategy", "capacity", "WIP"]
   }
 ]
