@@ -31,7 +31,7 @@ jobs:
               if entry['source'] == 'github':
                   assert 'url' in entry, f'entry {i}: github source requires url'
               assert 'repository' in entry, f'entry {i}: missing repository'
-              assert 'author' in entry, f'entry {i}: missing author'
+              assert 'authors' in entry and isinstance(entry['authors'], list), f'entry {i}: missing/invalid authors'
               assert 'tags' in entry and isinstance(entry['tags'], list), f'entry {i}: missing/invalid tags'
               names.append(entry['name'])
           assert names == sorted(names), 'entries must be alphabetically sorted by name'

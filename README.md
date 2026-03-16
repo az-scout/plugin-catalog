@@ -15,7 +15,7 @@ Each plugin entry has the following fields:
 | `source` | Yes | `"pypi"` or `"github"` |
 | `url` | If source=github | GitHub URL for direct installation |
 | `repository` | Yes | GitHub repository URL |
-| `author` | Yes | GitHub username of the author |
+| `authors` | Yes | Array of GitHub usernames of the authors |
 | `tags` | Yes | Array of keyword tags |
 
 ## Adding a plugin
