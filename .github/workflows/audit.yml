@@ -93,17 +93,26 @@ jobs:
             --repo "${{ matrix.repo }}" \
             --color "1d76db" \
             --description "Automated plugin convention review from plugin-catalog" \
-            2>/dev/null || true
+            --force 2>/dev/null || true
 
       - name: Check for existing review issue
         id: check
         run: |
+          # Search by label first, then by title as fallback
           EXISTING=$(gh issue list \
             --repo "${{ matrix.repo }}" \
             --label "$REVIEW_LABEL" \
             --state open \
             --json number \
             --jq '.[0].number // empty' 2>/dev/null || true)
+          if [ -z "$EXISTING" ]; then
+            EXISTING=$(gh issue list \
+              --repo "${{ matrix.repo }}" \
+              --search "in:title [plugin review]" \
+              --state open \
+              --json number \
+              --jq '.[0].number // empty' 2>/dev/null || true)
+          fi
           echo "existing=$EXISTING" >> "$GITHUB_OUTPUT"
           if [ -n "$EXISTING" ]; then
             echo "ℹ Review issue #$EXISTING already open — skipping"
@@ -142,8 +151,7 @@ jobs:
           ISSUE_URL=$(gh issue create \
             --repo "${{ matrix.repo }}" \
             --title "[plugin review] Convention compliance review" \
-            --body "$ISSUE_BODY" \
-            --label "$REVIEW_LABEL")
+            --body "$ISSUE_BODY")
 
           ISSUE_NUMBER=$(echo "$ISSUE_URL" | grep -oE '[0-9]+$')
           echo "url=$ISSUE_URL" >> "$GITHUB_OUTPUT"
@@ -153,6 +161,12 @@ jobs:
       - name: Assign Copilot
         if: steps.create.outputs.number != ''
         run: |
+          # Add the review label
+          gh issue edit "${{ steps.create.outputs.number }}" \
+            --repo "${{ matrix.repo }}" \
+            --add-label "$REVIEW_LABEL" 2>/dev/null || true
+
+          # Assign Copilot
           if gh issue edit "${{ steps.create.outputs.number }}" \
             --repo "${{ matrix.repo }}" \
             --add-assignee "@copilot" 2>/dev/null; then
