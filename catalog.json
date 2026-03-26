@@ -1,5 +1,13 @@
 [
   {
+    "name": "az-scout-plugin-avs-rvtools-analyser",
+    "description": "AVS migration risk analysis from RVTools Excel exports — 19 risk categories.",
+    "source": "pypi",
+    "repository": "https://github.com/az-scout/az-scout-plugin-avs-rvtools-analyser",
+    "authors": ["lrivallain"],
+    "tags": ["avs", "vmware", "rvtools", "migration", "risk-analysis"]
+  },
+  {
     "name": "az-scout-plugin-avs-sku",
     "description": "Azure VMware Solution (AVS) SKU exploration.",
     "source": "pypi",
