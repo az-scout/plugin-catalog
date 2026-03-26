@@ -100,7 +100,9 @@ Report any failures.
 
 ## 9. Report findings
 
-Produce a structured review summary:
+Post a structured review summary **as a comment on the originating issue**.
+If a PR is opened to address findings, reference the issue with `Closes #<number>`
+or `Fixes #<number>` in the PR description so it is automatically linked.
 
 ```markdown
 ## Plugin Review: <plugin-name>

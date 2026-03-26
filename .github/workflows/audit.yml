@@ -133,7 +133,10 @@ jobs:
           ### Task
 
           Review this plugin for compliance with az-scout conventions using the checklist below.
-          Read the source code in this repository and post your findings as a comment on this issue.
+          Read the source code in this repository and:
+
+          1. **Post your findings as a comment on this issue** using the report format from section 9.
+          2. If you open a PR to fix any issues, **link it to this issue** using \`Closes #<this-issue-number>\` in the PR description.
 
           **Instructions:**
           - Skip section 1 (source gathering — you have access to this repo) and section 8 (running lint — not applicable here).
