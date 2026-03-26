@@ -169,6 +169,9 @@ jobs:
             --repo "${{ matrix.repo }}" \
             --add-label "$REVIEW_LABEL" 2>/dev/null || true
 
+          # Wait for issue to be fully indexed before assigning Copilot
+          sleep 10
+
           # Assign Copilot
           if gh issue edit "${{ steps.create.outputs.number }}" \
             --repo "${{ matrix.repo }}" \
