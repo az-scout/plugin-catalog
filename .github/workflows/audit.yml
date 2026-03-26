@@ -19,8 +19,58 @@ permissions:
   contents: read
 
 jobs:
-  review:
+  # ---------------------------------------------------------------
+  # Job 1: Discover which plugins to review → outputs a JSON matrix
+  # ---------------------------------------------------------------
+  discover:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.discover.outputs.matrix }}
+      count: ${{ steps.discover.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Discover auditable plugins
+        id: discover
+        run: |
+          PLUGINS=$(python3 -c "
+          import json, sys
+          catalog = json.load(open('catalog.json'))
+          target = '${{ inputs.plugin }}'.strip()
+          result = []
+          for p in catalog:
+              if target and p['name'] != target:
+                  continue
+              if 'audit' in p:
+                  if not p['audit']:
+                      continue
+              else:
+                  if '/az-scout/' not in p.get('repository', ''):
+                      continue
+              # Extract owner/repo from repository URL
+              repo_path = p['repository'].replace('https://github.com/', '').rstrip('/')
+              result.append({
+                  'name': p['name'],
+                  'repo': repo_path,
+              })
+          print(json.dumps(result))
+          ")
+          COUNT=$(echo "$PLUGINS" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
+          echo "matrix={\"include\":$PLUGINS}" >> "$GITHUB_OUTPUT"
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "Found $COUNT plugin(s) to review"
+
+  # ---------------------------------------------------------------
+  # Job 2: One job per plugin — create issue + assign Copilot
+  # ---------------------------------------------------------------
+  review:
+    needs: discover
+    if: needs.discover.outputs.count != '0'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
+    name: "review (${{ matrix.name }})"
     env:
       GH_TOKEN: ${{ secrets.AUDIT_PAT }}
       REVIEW_LABEL: "az-scout-review"
@@ -30,77 +80,44 @@ jobs:
       - name: Build review prompt body
         id: prompt
         run: |
-          # Strip YAML frontmatter from the review prompt
           PROMPT=$(sed '1{/^---$/!q}; 1,/^---$/d' .github/prompts/review-plugin.prompt.md)
-
-          # Store in GITHUB_OUTPUT using heredoc delimiter
           {
             echo "REVIEW_PROMPT<<PROMPT_EOF"
             echo "$PROMPT"
             echo "PROMPT_EOF"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Discover auditable plugins
-        id: discover
+      - name: Ensure review label exists
         run: |
-          # Build JSON array of plugins to audit
-          # Filter: audit == true (explicit) OR az-scout org (default)
-          PLUGINS=$(python3 -c "
-          import json, sys
-          catalog = json.load(open('catalog.json'))
-          target = '${{ inputs.plugin }}'.strip()
-          result = []
-          for p in catalog:
-              # Skip if targeting a specific plugin and this isn't it
-              if target and p['name'] != target:
-                  continue
-              # Check audit eligibility
-              if 'audit' in p:
-                  if not p['audit']:
-                      continue
-              else:
-                  # Default: true for az-scout org only
-                  if '/az-scout/' not in p.get('repository', ''):
-                      continue
-              result.append({
-                  'name': p['name'],
-                  'repository': p['repository'],
-              })
-          json.dump(result, sys.stdout)
-          ")
-          echo "plugins=$PLUGINS" >> "$GITHUB_OUTPUT"
-          echo "Found $(echo "$PLUGINS" | python3 -c 'import json,sys; print(len(json.load(sys.stdin)))') plugin(s) to review"
+          gh label create "$REVIEW_LABEL" \
+            --repo "${{ matrix.repo }}" \
+            --color "1d76db" \
+            --description "Automated plugin convention review from plugin-catalog" \
+            2>/dev/null || true
 
-      - name: Create review issues and assign Copilot
+      - name: Check for existing review issue
+        id: check
+        run: |
+          EXISTING=$(gh issue list \
+            --repo "${{ matrix.repo }}" \
+            --label "$REVIEW_LABEL" \
+            --state open \
+            --json number \
+            --jq '.[0].number // empty' 2>/dev/null || true)
+          echo "existing=$EXISTING" >> "$GITHUB_OUTPUT"
+          if [ -n "$EXISTING" ]; then
+            echo "ℹ Review issue #$EXISTING already open — skipping"
+          fi
+
+      - name: Create review issue
+        if: steps.check.outputs.existing == '' && inputs.dry_run != true
+        id: create
         env:
           REVIEW_PROMPT: ${{ steps.prompt.outputs.REVIEW_PROMPT }}
         run: |
-          PLUGINS='${{ steps.discover.outputs.plugins }}'
-          COUNT=$(echo "$PLUGINS" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
+          set -euo pipefail
 
-          if [ "$COUNT" = "0" ]; then
-            echo "No auditable plugins found."
-            exit 0
-          fi
-
-          echo "$PLUGINS" | python3 -c "import json,sys; [print(json.dumps(p)) for p in json.load(sys.stdin)]" | while read -r PLUGIN; do
-            NAME=$(echo "$PLUGIN" | python3 -c "import json,sys; print(json.load(sys.stdin)['name'])")
-            REPO_URL=$(echo "$PLUGIN" | python3 -c "import json,sys; print(json.load(sys.stdin)['repository'])")
-
-            # Extract owner/repo from URL
-            OWNER_REPO=$(echo "$REPO_URL" | sed 's|https://github.com/||' | sed 's|/$||')
-
-            echo "🔍 Reviewing $NAME ($OWNER_REPO)..."
-
-            # Check for existing open review issue
-            EXISTING=$(gh issue list --repo "$OWNER_REPO" --label "$REVIEW_LABEL" --state open --json number --jq '.[0].number // empty' 2>/dev/null || true)
-            if [ -n "$EXISTING" ]; then
-              echo "  ℹ Review issue #$EXISTING already open — skipping"
-              continue
-            fi
-
-            # Build issue body
-            ISSUE_BODY="## Copilot Review Request: $NAME
+          ISSUE_BODY="## Copilot Review Request: ${{ matrix.name }}
 
           This is an automated review request from the [plugin-catalog](https://github.com/az-scout/plugin-catalog).
 
@@ -122,33 +139,28 @@ jobs:
           ---
           _This issue was automatically created by the [plugin-catalog review workflow](https://github.com/az-scout/plugin-catalog/actions/workflows/audit.yml)._"
 
-            if [ "${{ inputs.dry_run }}" = "true" ]; then
-              echo "  🏷️  Would create review issue on $OWNER_REPO (dry-run)"
-              continue
-            fi
+          ISSUE_URL=$(gh issue create \
+            --repo "${{ matrix.repo }}" \
+            --title "[plugin review] Convention compliance review" \
+            --body "$ISSUE_BODY" \
+            --label "$REVIEW_LABEL")
 
-            # Create the review issue
-            ISSUE_URL=$(gh issue create \
-              --repo "$OWNER_REPO" \
-              --title "[plugin review] Azure Scout Plugin convention review" \
-              --body "$ISSUE_BODY" \
-              --label "$REVIEW_LABEL" 2>&1) || {
-              echo "  ⚠ Failed to create issue on $OWNER_REPO: $ISSUE_URL"
-              continue
-            }
-            echo "  🆕 Created: $ISSUE_URL"
+          ISSUE_NUMBER=$(echo "$ISSUE_URL" | grep -oE '[0-9]+$')
+          echo "url=$ISSUE_URL" >> "$GITHUB_OUTPUT"
+          echo "number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "🆕 Created: $ISSUE_URL"
 
-            # Extract issue number from URL
-            ISSUE_NUMBER=$(echo "$ISSUE_URL" | grep -oE '[0-9]+$')
+      - name: Assign Copilot
+        if: steps.create.outputs.number != ''
+        run: |
+          if gh issue edit "${{ steps.create.outputs.number }}" \
+            --repo "${{ matrix.repo }}" \
+            --add-assignee "@copilot" 2>/dev/null; then
+            echo "🤖 Assigned Copilot to issue #${{ steps.create.outputs.number }}"
+          else
+            echo "::warning::Could not auto-assign Copilot — assign manually at ${{ steps.create.outputs.url }}"
+          fi
 
-            # Assign Copilot to the issue
-            gh issue edit "$ISSUE_NUMBER" \
-              --repo "$OWNER_REPO" \
-              --add-assignee "@copilot" 2>/dev/null && \
-              echo "  🤖 Assigned Copilot to issue #$ISSUE_NUMBER" || \
-              echo "  ℹ Could not auto-assign Copilot — assign manually at $ISSUE_URL"
-
-            echo ""
-          done
-
-          echo "✅ Review workflow complete"
+      - name: Dry-run summary
+        if: inputs.dry_run == true && steps.check.outputs.existing == ''
+        run: echo "🏷️ Would create review issue on ${{ matrix.repo }} (dry-run)"
