@@ -178,3 +178,26 @@ jobs:
       - name: Dry-run summary
         if: inputs.dry_run == true && steps.check.outputs.existing == ''
         run: echo "🏷️ Would create review issue on ${{ matrix.repo }} (dry-run)"
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "### 🔍 Review: \`${{ matrix.name }}\`"
+            echo ""
+            echo "| Item | Value |"
+            echo "|------|-------|"
+            echo "| **Repository** | [${{ matrix.repo }}](https://github.com/${{ matrix.repo }}) |"
+
+            if [ -n "${{ steps.check.outputs.existing }}" ]; then
+              echo "| **Status** | ⏭️ Skipped — existing issue open |"
+              echo "| **Issue** | [#${{ steps.check.outputs.existing }}](https://github.com/${{ matrix.repo }}/issues/${{ steps.check.outputs.existing }}) |"
+            elif [ "${{ inputs.dry_run }}" = "true" ]; then
+              echo "| **Status** | 🏷️ Dry-run — no issue created |"
+            elif [ -n "${{ steps.create.outputs.number }}" ]; then
+              echo "| **Status** | ✅ Issue created |"
+              echo "| **Issue** | [#${{ steps.create.outputs.number }}](${{ steps.create.outputs.url }}) |"
+            else
+              echo "| **Status** | ❌ Failed to create issue |"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
