@@ -13,7 +13,8 @@
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-avs-sku",
     "authors": ["lrivallain"],
-    "tags": ["avs", "vmware", "sku"]
+    "tags": ["avs", "vmware", "sku"],
+    "audit": true
   },
   {
     "name": "az-scout-plugin-batch-sku",
@@ -21,7 +22,8 @@
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-batch-sku",
     "authors": ["lrivallain"],
-    "tags": ["batch", "sku"]
+    "tags": ["batch", "sku"],
+    "audit": true
   },
   {
     "name": "az-scout-plugin-latency-stats",
@@ -29,7 +31,8 @@
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-latency-stats",
     "authors": ["lrivallain"],
-    "tags": ["latency", "network", "regions"]
+    "tags": ["latency", "network", "regions"],
+    "audit": true
   },
   {
     "name": "az-scout-plugin-odcr-coverage",
@@ -37,7 +40,8 @@
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-odcr-coverage",
     "authors": ["lrivallain"],
-    "tags": ["odcr", "capacity-reservation", "vm"]
+    "tags": ["odcr", "capacity-reservation", "vm"],
+    "audit": true
   },
   {
     "name": "az-scout-plugin-regions-cheapest",
@@ -45,7 +49,8 @@
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-regions-cheapest",
     "authors": ["rsabile"],
-    "tags": ["pricing", "regions", "cost", "WIP"]
+    "tags": ["pricing", "regions", "cost", "WIP"],
+    "audit": true
   },
   {
     "name": "az-scout-plugin-strategy-advisor",
@@ -53,6 +58,7 @@
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-strategy-advisor",
     "authors": ["rsabile", "lrivallain"],
-    "tags": ["strategy", "capacity", "WIP"]
+    "tags": ["strategy", "capacity", "WIP"],
+    "audit": true
   }
 ]

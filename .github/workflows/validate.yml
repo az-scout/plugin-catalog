@@ -33,6 +33,8 @@ jobs:
               assert 'repository' in entry, f'entry {i}: missing repository'
               assert 'authors' in entry and isinstance(entry['authors'], list), f'entry {i}: missing/invalid authors'
               assert 'tags' in entry and isinstance(entry['tags'], list), f'entry {i}: missing/invalid tags'
+              if 'audit' in entry:
+                  assert isinstance(entry['audit'], bool), f'entry {i}: audit must be a boolean'
               names.append(entry['name'])
           assert names == sorted(names), 'entries must be alphabetically sorted by name'
           print(f'✅ Schema valid ({len(catalog)} plugins)')

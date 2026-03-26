@@ -1,0 +1,154 @@
+name: Review Plugins
+
+on:
+  schedule:
+    - cron: "0 8 1 * *"  # 1st of each month at 08:00 UTC
+  workflow_dispatch:
+    inputs:
+      plugin:
+        description: "Review a single plugin (package name). Leave empty for all."
+        required: false
+        type: string
+      dry_run:
+        description: "Dry-run mode — print what would happen without creating issues"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.AUDIT_PAT }}
+      REVIEW_LABEL: "az-scout-review"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build review prompt body
+        id: prompt
+        run: |
+          # Strip YAML frontmatter from the review prompt
+          PROMPT=$(sed '1{/^---$/!q}; 1,/^---$/d' .github/prompts/review-plugin.prompt.md)
+
+          # Store in GITHUB_OUTPUT using heredoc delimiter
+          {
+            echo "REVIEW_PROMPT<<PROMPT_EOF"
+            echo "$PROMPT"
+            echo "PROMPT_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Discover auditable plugins
+        id: discover
+        run: |
+          # Build JSON array of plugins to audit
+          # Filter: audit == true (explicit) OR az-scout org (default)
+          PLUGINS=$(python3 -c "
+          import json, sys
+          catalog = json.load(open('catalog.json'))
+          target = '${{ inputs.plugin }}'.strip()
+          result = []
+          for p in catalog:
+              # Skip if targeting a specific plugin and this isn't it
+              if target and p['name'] != target:
+                  continue
+              # Check audit eligibility
+              if 'audit' in p:
+                  if not p['audit']:
+                      continue
+              else:
+                  # Default: true for az-scout org only
+                  if '/az-scout/' not in p.get('repository', ''):
+                      continue
+              result.append({
+                  'name': p['name'],
+                  'repository': p['repository'],
+              })
+          json.dump(result, sys.stdout)
+          ")
+          echo "plugins=$PLUGINS" >> "$GITHUB_OUTPUT"
+          echo "Found $(echo "$PLUGINS" | python3 -c 'import json,sys; print(len(json.load(sys.stdin)))') plugin(s) to review"
+
+      - name: Create review issues and assign Copilot
+        env:
+          REVIEW_PROMPT: ${{ steps.prompt.outputs.REVIEW_PROMPT }}
+        run: |
+          PLUGINS='${{ steps.discover.outputs.plugins }}'
+          COUNT=$(echo "$PLUGINS" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
+
+          if [ "$COUNT" = "0" ]; then
+            echo "No auditable plugins found."
+            exit 0
+          fi
+
+          echo "$PLUGINS" | python3 -c "import json,sys; [print(json.dumps(p)) for p in json.load(sys.stdin)]" | while read -r PLUGIN; do
+            NAME=$(echo "$PLUGIN" | python3 -c "import json,sys; print(json.load(sys.stdin)['name'])")
+            REPO_URL=$(echo "$PLUGIN" | python3 -c "import json,sys; print(json.load(sys.stdin)['repository'])")
+
+            # Extract owner/repo from URL
+            OWNER_REPO=$(echo "$REPO_URL" | sed 's|https://github.com/||' | sed 's|/$||')
+
+            echo "🔍 Reviewing $NAME ($OWNER_REPO)..."
+
+            # Check for existing open review issue
+            EXISTING=$(gh issue list --repo "$OWNER_REPO" --label "$REVIEW_LABEL" --state open --json number --jq '.[0].number // empty' 2>/dev/null || true)
+            if [ -n "$EXISTING" ]; then
+              echo "  ℹ Review issue #$EXISTING already open — skipping"
+              continue
+            fi
+
+            # Build issue body
+            ISSUE_BODY="## Copilot Review Request: $NAME
+
+          This is an automated review request from the [plugin-catalog](https://github.com/az-scout/plugin-catalog).
+
+          ### Task
+
+          Review this plugin for compliance with az-scout conventions using the checklist below.
+          Read the source code in this repository and post your findings as a comment on this issue.
+
+          **Instructions:**
+          - Skip section 1 (source gathering — you have access to this repo) and section 8 (running lint — not applicable here).
+          - Focus on sections 2–7 and produce the report as described in section 9.
+          - Only include sections with actual findings. Omit empty sections.
+          - If everything passes, say 'All checks passed.'
+
+          ---
+
+          $REVIEW_PROMPT
+
+          ---
+          _This issue was automatically created by the [plugin-catalog review workflow](https://github.com/az-scout/plugin-catalog/actions/workflows/audit.yml)._"
+
+            if [ "${{ inputs.dry_run }}" = "true" ]; then
+              echo "  🏷️  Would create review issue on $OWNER_REPO (dry-run)"
+              continue
+            fi
+
+            # Create the review issue
+            ISSUE_URL=$(gh issue create \
+              --repo "$OWNER_REPO" \
+              --title "[plugin review] Azure Scout Plugin convention review" \
+              --body "$ISSUE_BODY" \
+              --label "$REVIEW_LABEL" 2>&1) || {
+              echo "  ⚠ Failed to create issue on $OWNER_REPO: $ISSUE_URL"
+              continue
+            }
+            echo "  🆕 Created: $ISSUE_URL"
+
+            # Extract issue number from URL
+            ISSUE_NUMBER=$(echo "$ISSUE_URL" | grep -oE '[0-9]+$')
+
+            # Assign Copilot to the issue
+            gh issue edit "$ISSUE_NUMBER" \
+              --repo "$OWNER_REPO" \
+              --add-assignee "@copilot" 2>/dev/null && \
+              echo "  🤖 Assigned Copilot to issue #$ISSUE_NUMBER" || \
+              echo "  ℹ Could not auto-assign Copilot — assign manually at $ISSUE_URL"
+
+            echo ""
+          done
+
+          echo "✅ Review workflow complete"
