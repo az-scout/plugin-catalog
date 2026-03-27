@@ -5,7 +5,8 @@
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-avs-rvtools-analyser",
     "authors": ["lrivallain"],
-    "tags": ["avs", "vmware", "rvtools", "migration", "risk-analysis"]
+    "tags": ["avs", "vmware", "rvtools", "migration", "risk-analysis"],
+    "audit": true
   },
   {
     "name": "az-scout-plugin-avs-sku",
