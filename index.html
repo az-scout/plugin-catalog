@@ -91,6 +91,36 @@
       transition: border-color 0.15s;
     }
     .card:hover { border-color: var(--accent); }
+    .card.wip {
+      border-color: #d29922;
+      border-style: dashed;
+      opacity: 0.75;
+    }
+    .card.wip:hover { border-color: #e3b341; opacity: 1; }
+    .wip-badge {
+      font-size: 0.65rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: #3d2e00;
+      color: #d29922;
+      flex-shrink: 0;
+    }
+    [data-theme="light"] .wip-badge { background: #fff8c5; color: #9a6700; }
+    [data-theme="light"] .card.wip { border-color: #bf8700; }
+    [data-theme="light"] .card.wip:hover { border-color: #9a6700; }
+    .tag-wip {
+      background: #3d2e00 !important;
+      border-color: #d29922 !important;
+      color: #d29922 !important;
+    }
+    [data-theme="light"] .tag-wip {
+      background: #fff8c5 !important;
+      border-color: #bf8700 !important;
+      color: #9a6700 !important;
+    }
     .card-header {
       display: flex;
       align-items: baseline;
@@ -236,21 +266,27 @@
     });
 
     function renderCard(p) {
+      const isWip = (p.tags || []).some(t => t.toLowerCase() === "wip");
+
       const authors = (p.authors || []).map(a =>
         `<a href="https://github.com/${encodeURIComponent(a)}" title="${escapeHtml(a)}"><img src="https://github.com/${encodeURIComponent(a)}.png?size=40" alt="${escapeHtml(a)}"> ${escapeHtml(a)}</a>`
       ).join(", ");
 
-      const tags = (p.tags || []).map(t =>
-        `<span class="tag">${escapeHtml(t)}</span>`
-      ).join("");
+      const tags = (p.tags || []).map(t => {
+        const cls = t.toLowerCase() === "wip" ? "tag tag-wip" : "tag";
+        return `<span class="${cls}">${escapeHtml(t)}</span>`;
+      }).join("");
 
       const pypi = p.source === "pypi"
         ? `<span class="pypi-badge"><a href="https://pypi.org/project/${encodeURIComponent(p.name)}/"><img src="https://img.shields.io/pypi/v/${encodeURIComponent(p.name)}?label=pypi" alt="PyPI"></a></span>`
         : "";
 
-      return `<div class="card" data-name="${escapeHtml(p.name)}" data-tags="${escapeHtml((p.tags||[]).join(" "))}" data-desc="${escapeHtml(p.description)}">
+      const wipBadge = isWip ? '<span class="wip-badge">🚧 work in progress</span>' : '';
+
+      return `<div class="card${isWip ? ' wip' : ''}" data-name="${escapeHtml(p.name)}" data-tags="${escapeHtml((p.tags||[]).join(" "))}" data-desc="${escapeHtml(p.description)}">
         <div class="card-header">
           <a class="card-name" href="${escapeHtml(p.repository)}">${escapeHtml(p.name)}</a>
+          ${wipBadge}
           <span class="card-source source-${escapeHtml(p.source)}">${escapeHtml(p.source)}</span>
         </div>
         <div class="card-desc">${escapeHtml(p.description)}</div>
