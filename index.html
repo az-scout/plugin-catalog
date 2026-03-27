@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Azure Scout – Plugin Catalog</title>
+  <link rel="icon" href="https://docs.az-scout.com/assets/favicon.svg">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --purple: #d2a8ff;
+      --tag-bg: #1c2128;
+      --tag-border: #30363d;
+    }
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --surface: #f6f8fa;
+      --border: #d1d9e0;
+      --text: #1f2328;
+      --text-muted: #656d76;
+      --accent: #0969da;
+      --green: #1a7f37;
+      --purple: #8250df;
+      --tag-bg: #ddf4ff;
+      --tag-border: #54aeff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 { font-size: 1.4rem; font-weight: 600; }
+    header h1 span { color: var(--text-muted); font-weight: 400; }
+    .controls { display: flex; gap: 0.75rem; align-items: center; }
+    input[type="search"] {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      color: var(--text);
+      font-size: 0.875rem;
+      width: 220px;
+    }
+    input[type="search"]::placeholder { color: var(--text-muted); }
+    .theme-toggle {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.35rem 0.6rem;
+      cursor: pointer;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    .count {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      padding: 0.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    main { padding: 1.5rem 2rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transition: border-color 0.15s;
+    }
+    .card:hover { border-color: var(--accent); }
+    .card-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .card-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .card-name:hover { text-decoration: underline; }
+    .card-source {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      flex-shrink: 0;
+    }
+    .source-pypi { background: #1c5d2e; color: #3fb950; }
+    .source-github { background: #272e38; color: #8b949e; }
+    [data-theme="light"] .source-pypi { background: #dafbe1; color: #1a7f37; }
+    [data-theme="light"] .source-github { background: #eef1f5; color: #656d76; }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 12px;
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--accent);
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: auto;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .card-authors { display: flex; align-items: center; gap: 0.5rem; }
+    .card-authors img {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      vertical-align: middle;
+    }
+    .card-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .card-footer a:hover { color: var(--accent); }
+    .pypi-badge { display: flex; align-items: center; }
+    .pypi-badge img {
+      height: 20px;
+      vertical-align: middle;
+    }
+    .empty {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .disclaimer {
+      margin: 2rem 2rem 0;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .disclaimer strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Azure Scout <span>– Plugin Catalog</span></h1>
+    <div class="controls">
+      <input type="search" id="search" placeholder="Filter plugins…" autocomplete="off">
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+    </div>
+  </header>
+  <div class="count" id="count"></div>
+  <div class="disclaimer">
+    <strong>Disclaimer:</strong> Plugins listed in this catalog are reviewed before inclusion but are not
+    audited for security or correctness. Installation and usage of plugins is at your own risk and
+    is not the responsibility of az-scout maintainers. This catalog is a convenience listing of
+    declared and commonly used community plugins — plugins can also exist outside of this catalog
+    and be installed manually by users.
+</div>
+  <main>
+    <div class="loading" id="loading">Loading catalog…</div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>No plugins match your search.</div>
+  </main>
+  <footer>
+    <a href="https://github.com/az-scout/plugin-catalog">plugin-catalog</a> ·
+    <a href="https://az-scout.com">az-scout</a> ·
+    <a href="/catalog.json"><em>catalog.json</em></a>
+  </footer>
+  <script>
+    const grid = document.getElementById("grid");
+    const search = document.getElementById("search");
+    const countEl = document.getElementById("count");
+    const loading = document.getElementById("loading");
+    const empty = document.getElementById("empty");
+    let plugins = [];
+
+    // Theme
+    const toggle = document.getElementById("themeToggle");
+    const stored = localStorage.getItem("theme");
+    if (stored) document.documentElement.dataset.theme = stored;
+    toggle.textContent = document.documentElement.dataset.theme === "light" ? "☀️" : "🌙";
+    toggle.addEventListener("click", () => {
+      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem("theme", next);
+      toggle.textContent = next === "light" ? "☀️" : "🌙";
+    });
+
+    function renderCard(p) {
+      const authors = (p.authors || []).map(a =>
+        `<a href="https://github.com/${encodeURIComponent(a)}" title="${escapeHtml(a)}"><img src="https://github.com/${encodeURIComponent(a)}.png?size=40" alt="${escapeHtml(a)}"> ${escapeHtml(a)}</a>`
+      ).join(", ");
+
+      const tags = (p.tags || []).map(t =>
+        `<span class="tag">${escapeHtml(t)}</span>`
+      ).join("");
+
+      const pypi = p.source === "pypi"
+        ? `<span class="pypi-badge"><a href="https://pypi.org/project/${encodeURIComponent(p.name)}/"><img src="https://img.shields.io/pypi/v/${encodeURIComponent(p.name)}?label=pypi" alt="PyPI"></a></span>`
+        : "";
+
+      return `<div class="card" data-name="${escapeHtml(p.name)}" data-tags="${escapeHtml((p.tags||[]).join(" "))}" data-desc="${escapeHtml(p.description)}">
+        <div class="card-header">
+          <a class="card-name" href="${escapeHtml(p.repository)}">${escapeHtml(p.name)}</a>
+          <span class="card-source source-${escapeHtml(p.source)}">${escapeHtml(p.source)}</span>
+        </div>
+        <div class="card-desc">${escapeHtml(p.description)}</div>
+        <div class="card-tags">${tags}</div>
+        <div class="card-footer">
+          <span class="card-authors">${authors}</span>
+          ${pypi}
+        </div>
+      </div>`;
+    }
+
+    function escapeHtml(s) {
+      if (!s) return "";
+      return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    function filterPlugins() {
+      const q = search.value.toLowerCase().trim();
+      const cards = grid.querySelectorAll(".card");
+      let visible = 0;
+      cards.forEach(card => {
+        const text = [card.dataset.name, card.dataset.tags, card.dataset.desc].join(" ").toLowerCase();
+        const show = !q || text.includes(q);
+        card.style.display = show ? "" : "none";
+        if (show) visible++;
+      });
+      empty.hidden = visible > 0;
+      countEl.textContent = q
+        ? `${visible} of ${plugins.length} plugin(s) matching "${search.value}"`
+        : `${plugins.length} plugin(s)`;
+    }
+
+    fetch("catalog.json")
+      .then(r => r.json())
+      .then(data => {
+        plugins = data;
+        loading.remove();
+        grid.innerHTML = plugins.map(renderCard).join("");
+        countEl.textContent = `${plugins.length} plugin(s)`;
+      })
+      .catch(() => {
+        loading.textContent = "Failed to load catalog.json";
+      });
+
+    search.addEventListener("input", filterPlugins);
+  </script>
+</body>
+</html>
