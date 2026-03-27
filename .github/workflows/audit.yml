@@ -77,16 +77,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build review prompt body
-        id: prompt
-        run: |
-          PROMPT=$(sed '1{/^---$/!q}; 1,/^---$/d' .github/prompts/review-plugin.prompt.md)
-          {
-            echo "REVIEW_PROMPT<<PROMPT_EOF"
-            echo "$PROMPT"
-            echo "PROMPT_EOF"
-          } >> "$GITHUB_OUTPUT"
-
       - name: Ensure review label exists
         run: |
           gh label create "$REVIEW_LABEL" \
@@ -121,35 +111,19 @@ jobs:
       - name: Create review issue
         if: steps.check.outputs.existing == '' && inputs.dry_run != true
         id: create
-        env:
-          REVIEW_PROMPT: ${{ steps.prompt.outputs.REVIEW_PROMPT }}
         run: |
           set -euo pipefail
 
-          ISSUE_BODY="## Copilot Review Request: ${{ matrix.name }}
+          ISSUE_BODY="## Convention Review: ${{ matrix.name }}
 
-          This is an automated review request from the [plugin-catalog](https://github.com/az-scout/plugin-catalog).
+          Automated review request from the [plugin-catalog](https://github.com/az-scout/plugin-catalog).
 
-          ### Task
-
-          Review this plugin for compliance with az-scout conventions using the checklist below.
-          Read the source code in this repository and:
-
-          1. **Post your findings as a comment on this issue** using the report format from section 9.
-          2. If you open a PR to fix any issues, **link it to this issue** using \`Closes #<this-issue-number>\` in the PR description.
-
-          **Instructions:**
-          - Skip section 1 (source gathering — you have access to this repo) and section 8 (running lint — not applicable here).
-          - Focus on sections 2–7 and produce the report as described in section 9.
-          - Only include sections with actual findings. Omit empty sections.
-          - If everything passes, say 'All checks passed.'
+          Review this plugin for compliance with az-scout conventions.
+          Post findings as a comment on this issue.
+          If you open a PR, link it with \`Closes #<this-issue-number>\`.
 
           ---
-
-          $REVIEW_PROMPT
-
-          ---
-          _This issue was automatically created by the [plugin-catalog review workflow](https://github.com/az-scout/plugin-catalog/actions/workflows/audit.yml)._"
+          _Created by the [plugin-catalog review workflow](https://github.com/az-scout/plugin-catalog/actions/workflows/audit.yml)._"
 
           ISSUE_URL=$(gh issue create \
             --repo "${{ matrix.repo }}" \
@@ -161,7 +135,7 @@ jobs:
           echo "number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
           echo "🆕 Created: $ISSUE_URL"
 
-      - name: Assign Copilot
+      - name: Assign Copilot via REST API
         if: steps.create.outputs.number != ''
         run: |
           # Add the review label
@@ -169,16 +143,40 @@ jobs:
             --repo "${{ matrix.repo }}" \
             --add-label "$REVIEW_LABEL" 2>/dev/null || true
 
-          # Wait for issue to be fully indexed before assigning Copilot
+          # Wait for issue to be fully indexed
           sleep 10
 
-          # Assign Copilot
-          if gh issue edit "${{ steps.create.outputs.number }}" \
-            --repo "${{ matrix.repo }}" \
-            --add-assignee "@copilot" 2>/dev/null; then
-            echo "🤖 Assigned Copilot to issue #${{ steps.create.outputs.number }}"
+          # Extract owner and repo
+          OWNER=$(echo "${{ matrix.repo }}" | cut -d'/' -f1)
+          REPO=$(echo "${{ matrix.repo }}" | cut -d'/' -f2)
+
+          # Assign Copilot using REST API with custom agent
+          HTTP_STATUS=$(curl -s -o /tmp/copilot_response.json -w "%{http_code}" \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${OWNER}/${REPO}/issues/${{ steps.create.outputs.number }}/copilot" \
+            -d '{
+              "custom_agent": "plugin-reviewer"
+            }')
+
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+            echo "🤖 Assigned Copilot (plugin-reviewer agent) to issue #${{ steps.create.outputs.number }}"
+            cat /tmp/copilot_response.json | python3 -c "
+          import json, sys
+          try:
+              data = json.load(sys.stdin)
+              if 'pull_request' in data:
+                  pr = data['pull_request']
+                  print(f'  📋 PR #{pr.get(\"number\", \"?\")} — {pr.get(\"url\", \"\")}')
+          except: pass
+          " || true
           else
-            echo "::warning::Could not auto-assign Copilot — assign manually at ${{ steps.create.outputs.url }}"
+            echo "::warning::Copilot assignment returned HTTP $HTTP_STATUS"
+            cat /tmp/copilot_response.json 2>/dev/null || true
+            echo ""
+            echo "Assign Copilot manually at ${{ steps.create.outputs.url }}"
           fi
 
       - name: Dry-run summary
