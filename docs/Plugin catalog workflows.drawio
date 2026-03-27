@@ -1,0 +1,143 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6" pages="2">
+  <diagram name="Publishing" id="5_O6xPu7J1NWu9RyRQ3y">
+    <mxGraphModel dx="1025" dy="1234" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="5" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f3f4f6;strokeColor=#9ca3af;fontColor=#1f2937;" value="📦 plugin-catalog" vertex="1">
+          <mxGeometry height="257" width="683" x="583" y="186" as="geometry" />
+        </mxCell>
+        <mxCell id="7" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dbeafe;strokeColor=#2563eb;fontColor=#1e40af;" value="➕ Add Plugin&#xa;PR to catalog.json&#xa;or use add-plugin prompt" vertex="1">
+          <mxGeometry height="54" width="260" x="624" y="71" as="geometry" />
+        </mxCell>
+        <mxCell id="8" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f9fafb;strokeColor=#9ca3af;fontColor=#1f2937;" value="az-scout/plugin-catalog&#xa;catalog.json · prompts&#xa;agents · workflow" vertex="1">
+          <mxGeometry height="54" width="260" x="624" y="211" as="geometry" />
+        </mxCell>
+        <mxCell id="9" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dcfce7;strokeColor=#16a34a;fontColor=#166534;" value="✅ Validate CI&#xa;JSON schema · duplicates · sort" vertex="1">
+          <mxGeometry height="54" width="260" x="624" y="364" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dcfce7;strokeColor=#16a34a;fontColor=#166534;" value="🌐 Serve Catalog&#xa;plugin-catalog.az-scout.com&#xa;GET /catalog.json" vertex="1">
+          <mxGeometry height="54" width="260" x="974" y="364" as="geometry" />
+        </mxCell>
+        <mxCell id="A6z7jJPP9Xplx1K4eteb-31" edge="1" parent="1" source="11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A6z7jJPP9Xplx1K4eteb-33" connectable="0" parent="A6z7jJPP9Xplx1K4eteb-31" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="GET" vertex="1">
+          <mxGeometry relative="1" x="-0.5911" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="11" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;" value="🔌 az-scout Plugin Manager&#xa;Fetches catalog at startup" vertex="1">
+          <mxGeometry height="54" width="260" x="974" y="33" as="geometry" />
+        </mxCell>
+        <mxCell id="19" edge="1" parent="1" source="8" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;" target="9" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="21" edge="1" parent="1" source="7" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" target="8" value="PR">
+          <mxGeometry relative="1" x="-0.2791" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="22" edge="1" parent="1" source="9" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;labelBackgroundColor=light-dark(#f3f4f6, #ededed);fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;" target="10" value="publish">
+          <mxGeometry relative="1" x="0.0053" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XPxoKZDvf8bgnLVsS7MJ-23" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="7" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="754" y="2" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XPxoKZDvf8bgnLVsS7MJ-24" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" target="7" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="754" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XPxoKZDvf8bgnLVsS7MJ-22" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;labelBackgroundColor=default;" value="Plugin author" vertex="1">
+          <mxGeometry height="60" width="30" x="739" y="-82" as="geometry" />
+        </mxCell>
+        <mxCell id="XPxoKZDvf8bgnLVsS7MJ-25" parent="1" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;editableCssRules=.*;image=data:image/svg+xml,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjUuNSAxLjUgMjEgMjkiIHdpZHRoPSIyMSIgaGVpZ2h0PSIyOSI+JiN4YTsgICYjeGE7ICA8cGF0aCBkPSJNMTYgMkMxMC40OCAyIDYgNi40OCA2IDEyYzAgNyAxMCAxOCAxMCAxOHMxMC0xMSAxMC0xOGMwLTUuNTItNC40OC0xMC0xMC0xMHoiIGZpbGw9IiMwMDc4ZDQiLz4mI3hhOyAgJiN4YTsgIDxsaW5lIHgxPSIxMSIgeTE9IjkiIHgyPSIyMSIgeTI9IjEzIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC42Ii8+JiN4YTsgIDxsaW5lIHgxPSIxMSIgeTE9IjEzIiB4Mj0iMjEiIHkyPSI5IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC42Ii8+JiN4YTsgIDxsaW5lIHgxPSIxMSIgeTE9IjE3IiB4Mj0iMjEiIHkyPSIxNyIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuNiIvPiYjeGE7ICAmI3hhOyAgPGNpcmNsZSBjeD0iMTEiIGN5PSI5IiByPSIxLjgiIGZpbGw9IiNmZmYiLz4mI3hhOyAgPGNpcmNsZSBjeD0iMTEiIGN5PSIxMyIgcj0iMS44IiBmaWxsPSIjZmZmIi8+JiN4YTsgIDxjaXJjbGUgY3g9IjExIiBjeT0iMTciIHI9IjEuOCIgZmlsbD0iI2ZmZiIvPiYjeGE7ICAmI3hhOyAgPGNpcmNsZSBjeD0iMjEiIGN5PSI5IiByPSIxLjgiIGZpbGw9IiNmZmYiLz4mI3hhOyAgPGNpcmNsZSBjeD0iMjEiIGN5PSIxMyIgcj0iMS44IiBmaWxsPSIjZmZmIi8+JiN4YTsgIDxjaXJjbGUgY3g9IjIxIiBjeT0iMTciIHI9IjEuOCIgZmlsbD0iI2ZmZiIvPiYjeGE7PC9zdmc+;" value="" vertex="1">
+          <mxGeometry height="50" width="36.21" x="1085.89" y="-60" as="geometry" />
+        </mxCell>
+        <mxCell id="XPxoKZDvf8bgnLVsS7MJ-26" edge="1" parent="1" source="XPxoKZDvf8bgnLVsS7MJ-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.502;entryY=-0.033;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="11" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1103.9" as="sourcePoint" />
+            <mxPoint x="1103.9" y="33" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="0AA0eddBgvkcPpzLUlq3" name="Reviewing">
+    <mxGraphModel dx="1425" dy="434" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="87GdPe3wEimPzgt-tlHx-2" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#ede9fe;strokeColor=#7c3aed;fontColor=#5b21b6;dashed=1;dashPattern=6 3;labelPosition=center;verticalLabelPosition=top;align=center;verticalAlign=bottom;" value="🔍 Review Plugins Workflow" vertex="1">
+          <mxGeometry height="393" width="389" x="152" y="426" as="geometry" />
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-1" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#ecfdf5;strokeColor=#16a34a;fontColor=#166534;dashed=1;dashPattern=4 3;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;spacingRight=0;spacingLeft=0;" value="📂 Plugin Repository · az-scout org" vertex="1">
+          <mxGeometry height="412" width="388" x="203" y="665" as="geometry" />
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-3" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f5f3ff;strokeColor=#7c3aed;fontColor=#5b21b6;" value="1. Discover&#xa;catalog.json&#xa;audit: true" vertex="1">
+          <mxGeometry height="54" width="260" x="229" y="442" as="geometry" />
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-4" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f5f3ff;strokeColor=#7c3aed;fontColor=#5b21b6;" value="2. Matrix Jobs&#xa;1 job per plugin&#xa;fail-fast: false" vertex="1">
+          <mxGeometry height="54" width="260" x="229" y="535" as="geometry" />
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-18" edge="1" parent="1" source="87GdPe3wEimPzgt-tlHx-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" target="87GdPe3wEimPzgt-tlHx-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-5" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f5f3ff;strokeColor=#7c3aed;fontColor=#5b21b6;" value="3. Create #Issue&#xa;On plugin repo&#xa;Skip if open" vertex="1">
+          <mxGeometry height="54" width="260" x="229" y="627" as="geometry" />
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-6" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f5f3ff;strokeColor=#7c3aed;fontColor=#5b21b6;" value="4. Assign Copilot&#xa;REST API&#xa;agent: plugin-reviewer" vertex="1">
+          <mxGeometry height="54" width="260" x="229" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-7" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dbeafe;strokeColor=#2563eb;fontColor=#1e40af;" value="🤖 plugin-reviewer agent&#xa;.github-private/agents/&#xa;org-level" vertex="1">
+          <mxGeometry height="54" width="260" x="229" y="812" as="geometry" />
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-19" edge="1" parent="1" source="87GdPe3wEimPzgt-tlHx-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" target="87GdPe3wEimPzgt-tlHx-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-8" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f9fafb;strokeColor=#7c3aed;fontColor=#1f2937;" value="📝 Copilot Reviews Code&#xa;Reads source&#xa;Checks conventions" vertex="1">
+          <mxGeometry height="54" width="260" x="229" y="905" as="geometry" />
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-9" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f9fafb;strokeColor=#9ca3af;fontColor=#1f2937;" value="📋 Findings &amp; PR&#xa;Comment on #issue&#xa;Opens fixing PR" vertex="1">
+          <mxGeometry height="54" width="260" x="229" y="997" as="geometry" />
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-10" edge="1" parent="1" source="87GdPe3wEimPzgt-tlHx-3" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" target="87GdPe3wEimPzgt-tlHx-4" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-11" edge="1" parent="1" source="87GdPe3wEimPzgt-tlHx-4" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" target="87GdPe3wEimPzgt-tlHx-5" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-13" edge="1" parent="1" source="87GdPe3wEimPzgt-tlHx-7" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" target="87GdPe3wEimPzgt-tlHx-8" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-15" edge="1" parent="1" source="87GdPe3wEimPzgt-tlHx-6" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" target="87GdPe3wEimPzgt-tlHx-7" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="87GdPe3wEimPzgt-tlHx-17" edge="1" parent="1" source="87GdPe3wEimPzgt-tlHx-9" style="curved=1;dashed=1;dashPattern=2 3;startArrow=none;endArrow=block;exitX=0.94;exitY=0;entryX=0.81;entryY=1;labelBackgroundColor=none;" target="87GdPe3wEimPzgt-tlHx-5" value="Closes #issue">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="541" y="949" />
+              <mxPoint x="528" y="731" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
