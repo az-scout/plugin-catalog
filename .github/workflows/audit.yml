@@ -135,49 +135,37 @@ jobs:
           echo "number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
           echo "🆕 Created: $ISSUE_URL"
 
-      - name: Assign Copilot via REST API
+      - name: Add review label
         if: steps.create.outputs.number != ''
         run: |
-          # Add the review label
           gh issue edit "${{ steps.create.outputs.number }}" \
             --repo "${{ matrix.repo }}" \
             --add-label "$REVIEW_LABEL" 2>/dev/null || true
 
+      - name: Assign Copilot
+        if: steps.create.outputs.number != ''
+        run: |
           # Wait for issue to be fully indexed
           sleep 10
 
-          # Extract owner and repo
-          OWNER=$(echo "${{ matrix.repo }}" | cut -d'/' -f1)
-          REPO=$(echo "${{ matrix.repo }}" | cut -d'/' -f2)
-
           # Assign Copilot using REST API with custom agent
-          HTTP_STATUS=$(curl -s -o /tmp/copilot_response.json -w "%{http_code}" \
-            -X POST \
+          gh api \
+            --method POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GH_TOKEN" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/${OWNER}/${REPO}/issues/${{ steps.create.outputs.number }}/copilot" \
-            -d '{
-              "custom_agent": "plugin-reviewer"
-            }')
+            "/repos/${{ matrix.repo }}/issues/${{ steps.create.outputs.number }}/assignees" \
+            --input - <<< '{
+              "assignees": ["copilot-swe-agent[bot]"],
+              "agent_assignment": {
+                "target_repo": "${{ matrix.repo }}",
+                "base_branch": "main",
+                "custom_instructions": "",
+                "custom_agent": "plugin-reviewer",
+                "model": ""
+              }
+            }'
 
-          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
-            echo "🤖 Assigned Copilot (plugin-reviewer agent) to issue #${{ steps.create.outputs.number }}"
-            cat /tmp/copilot_response.json | python3 -c "
-          import json, sys
-          try:
-              data = json.load(sys.stdin)
-              if 'pull_request' in data:
-                  pr = data['pull_request']
-                  print(f'  📋 PR #{pr.get(\"number\", \"?\")} — {pr.get(\"url\", \"\")}')
-          except: pass
-          " || true
-          else
-            echo "::warning::Copilot assignment returned HTTP $HTTP_STATUS"
-            cat /tmp/copilot_response.json 2>/dev/null || true
-            echo ""
-            echo "Assign Copilot manually at ${{ steps.create.outputs.url }}"
-          fi
+          echo "🤖 Assigned Copilot (plugin-reviewer agent) to issue #${{ steps.create.outputs.number }}"
 
       - name: Dry-run summary
         if: inputs.dry_run == true && steps.check.outputs.existing == ''
