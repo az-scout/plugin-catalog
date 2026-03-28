@@ -18,6 +18,7 @@ Each plugin entry has the following fields:
 | `authors` | Yes | Array of GitHub usernames of the authors |
 | `tags` | Yes | Array of keyword tags |
 | `audit` | No | Enable automated convention audits (`true`/`false`). Defaults to `true` for `az-scout` org repos, `false` for others. |
+| `long_description` | No | Longer description shown below the short one in the catalog UI. |
 
 ## Adding a plugin
 

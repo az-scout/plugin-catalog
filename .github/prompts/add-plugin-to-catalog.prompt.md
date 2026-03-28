@@ -12,6 +12,7 @@ Collect:
 - **Plugin name** (package name, e.g. `az-scout-plugin-foo`)
 - **GitHub repository URL** (e.g. `https://github.com/owner/az-scout-plugin-foo`)
 - **Short description** (one line)
+- **Long description** (optional, a paragraph explaining what the plugin does in more detail)
 - **Source:** `pypi` if published on PyPI, otherwise `github`
 - **Authors** — GitHub usernames of the plugin authors
 - **Tags** — keyword tags for the plugin (e.g. `["batch", "sku"]`)
@@ -35,6 +36,7 @@ Create a JSON entry following the catalog schema:
 {
   "name": "az-scout-plugin-foo",
   "description": "Short description.",
+  "long_description": "A longer paragraph describing what the plugin does, its features, and how it helps users.",
   "source": "pypi",
   "repository": "https://github.com/owner/az-scout-plugin-foo",
   "authors": ["github-username"],
@@ -48,6 +50,7 @@ For GitHub-only plugins (not on PyPI), add a `url` field:
 {
   "name": "az-scout-plugin-foo",
   "description": "Short description.",
+  "long_description": "A longer paragraph describing what the plugin does, its features, and how it helps users.",
   "source": "github",
   "url": "https://github.com/owner/az-scout-plugin-foo",
   "repository": "https://github.com/owner/az-scout-plugin-foo",

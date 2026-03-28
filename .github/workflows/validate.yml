@@ -35,6 +35,8 @@ jobs:
               assert 'tags' in entry and isinstance(entry['tags'], list), f'entry {i}: missing/invalid tags'
               if 'audit' in entry:
                   assert isinstance(entry['audit'], bool), f'entry {i}: audit must be a boolean'
+              if 'long_description' in entry:
+                  assert isinstance(entry['long_description'], str), f'entry {i}: long_description must be a string'
               names.append(entry['name'])
           assert names == sorted(names), 'entries must be alphabetically sorted by name'
           print(f'✅ Schema valid ({len(catalog)} plugins)')
@@ -49,6 +51,26 @@ jobs:
           dupes = [n for n in names if names.count(n) > 1]
           assert not dupes, f'Duplicate names: {set(dupes)}'
           print('✅ No duplicates')
+          "
+
+      - name: Check for duplicate JSON keys
+        run: |
+          python3 -c "
+          import json
+
+          class DuplicateKeyChecker(json.JSONDecoder):
+              def __init__(self, *args, **kwargs):
+                  super().__init__(object_pairs_hook=self.check_duplicates, *args, **kwargs)
+              def check_duplicates(self, pairs):
+                  keys = [k for k, v in pairs]
+                  dupes = [k for k in keys if keys.count(k) > 1]
+                  if dupes:
+                      raise ValueError(f'Duplicate JSON keys found: {set(dupes)}')
+                  return dict(pairs)
+
+          with open('catalog.json') as f:
+              DuplicateKeyChecker().decode(f.read())
+          print('✅ No duplicate JSON keys')
           "
 
   notify:

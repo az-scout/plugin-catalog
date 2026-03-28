@@ -1,7 +1,8 @@
 [
   {
     "name": "az-scout-plugin-avs-rvtools-analyser",
-    "description": "AVS migration risk analysis from RVTools Excel exports — 19 risk categories.",
+    "description": "AVS migration risk analysis from RVTools Excel exports.",
+    "long_description": "This plugin helps analyze RVTools Excel exports to identify potential issues and risks in an Azure VMware Solution (AVS) migration project. It checks for common problems such as unsupported VM configurations or networks compatibility concerns. The plugin provides a risk assessment based on the findings, and if Azure OpenAI is configured in Az Scout settings, it can also offer AI-driven recommendations to help mitigate identified risks and optimize the migration strategy.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-avs-rvtools-analyser",
     "authors": ["lrivallain"],
@@ -11,6 +12,7 @@
   {
     "name": "az-scout-plugin-avs-sku",
     "description": "Azure VMware Solution (AVS) SKU exploration.",
+    "long_description": "This plugin provides detailed information about Azure VMware Solution (AVS) SKUs, including their specifications, availability across regions, and pricing. It allows users to explore different AVS SKU options to find the best fit for their workloads. Plugin also provides a convenient MCP endpoint to compare a large set of technical details between AVS SKUs to help users make informed decisions when planning their AVS deployments.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-avs-sku",
     "authors": ["lrivallain"],
@@ -19,7 +21,8 @@
   },
   {
     "name": "az-scout-plugin-batch-sku",
-    "description": "Batch SKU availability checker across multiple regions.",
+    "description": "Azure Batch SKU availability checker across multiple regions.",
+    "long_description": "This plugin allows users to check the availability of Azure VM SKUs across various regions for Azure Batch workloads. It provides detailed information on SKU availability, helping users plan and optimize their batch processing tasks across different regions.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-batch-sku",
     "authors": ["lrivallain"],
@@ -28,7 +31,8 @@
   },
   {
     "name": "az-scout-plugin-latency-stats",
-    "description": "Inter-region latency statistics with D3.js graph visualisation.",
+    "description": "Inter-region latency statistics with D3.js graph visualization.",
+    "long_description": "This plugin provides inter-region latency statistics and visualizes them using D3.js graphs. It helps users understand network performance between different regions, aiding in the optimization of multi-region deployments. It also provides inter-AZ latency statistics for a more granular view of network performance within regions.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-latency-stats",
     "authors": ["lrivallain"],
@@ -38,6 +42,7 @@
   {
     "name": "az-scout-plugin-odcr-coverage",
     "description": "ODCR coverage analysis — identify VMs at risk of allocation failure.",
+    "long_description": "This plugin provides ODCR (On-Demand Capacity Reservation) coverage analysis, helping users identify virtual machines (VMs) that are at risk of allocation failure due to insufficient capacity reservations. It helps to optimize resource allocation to prevent potential disruptions.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-odcr-coverage",
     "authors": ["lrivallain"],
@@ -47,6 +52,7 @@
   {
     "name": "az-scout-plugin-regions-cheapest",
     "description": "Find the cheapest Azure regions for a given VM SKU.",
+    "long_description": "This plugin helps users identify the cheapest Azure regions for a specific VM SKU. By analyzing pricing data across different regions, it provides insights into cost-effective deployment options, enabling users to optimize their cloud spending while meeting their performance and availability requirements.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-regions-cheapest",
     "authors": ["rsabile"],
@@ -56,6 +62,7 @@
   {
     "name": "az-scout-plugin-strategy-advisor",
     "description": "Multi-region capacity strategy recommendation engine.",
+    "long_description": "This plugin provides recommendations for multi-region capacity strategies, helping users optimize their resource allocation across different regions. It analyzes various factors such as availability, cost, and performance to suggest the best strategies for deploying workloads in multiple regions.",
     "source": "pypi",
     "repository": "https://github.com/az-scout/az-scout-plugin-strategy-advisor",
     "authors": ["rsabile", "lrivallain"],
