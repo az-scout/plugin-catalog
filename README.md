@@ -2,7 +2,7 @@
 
 Official plugin catalog for [az-scout](https://github.com/az-scout/az-scout).
 
-Served at **https://plugin-catalog.az-scout.com/catalog.json**
+Explore the available plugins in the online catalog: [docs.az-scout.com/catalog](https://docs.az-scout.com/catalog)
 
 ## Schema
 
