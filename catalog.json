@@ -1,5 +1,15 @@
 [
   {
+    "name": "az-scout-plugin-aks-placement-advisor",
+    "description": "AKS Placement Advisor — evaluates and recommends VM SKUs for AKS node pools.",
+    "long_description": "This plugin helps users choose the right VM SKU for Azure Kubernetes Service (AKS) node pools. It queries the AKS VM SKUs API to retrieve confirmed AKS-compatible SKUs, applies system vs user node pool eligibility rules (burstable, Premium Storage, vCPU/memory minimums, VMSS constraints), enriches with quota and pricing data, and computes a deployment confidence score. Features include a 3-state eligibility model (eligible/warning/ineligible), column filtering with status dropdown, SKU detail modal, fallback SKU suggestions, multi-region comparison, and an AKS Advisor chat mode.",
+    "source": "pypi",
+    "repository": "https://github.com/az-scout/az-scout-plugin-aks-placement-advisor",
+    "authors": ["rsabile", "lrivallain"],
+    "tags": ["aks", "kubernetes", "sku", "node-pool", "placement"],
+    "audit": true
+  },
+  {
     "name": "az-scout-plugin-avs-rvtools-analyser",
     "description": "AVS migration risk analysis from RVTools Excel exports.",
     "long_description": "This plugin helps analyze RVTools Excel exports to identify potential issues and risks in an Azure VMware Solution (AVS) migration project. It checks for common problems such as unsupported VM configurations or networks compatibility concerns. The plugin provides a risk assessment based on the findings, and if Azure OpenAI is configured in Az Scout settings, it can also offer AI-driven recommendations to help mitigate identified risks and optimize the migration strategy.",
