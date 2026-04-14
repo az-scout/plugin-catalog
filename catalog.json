@@ -40,6 +40,16 @@
     "audit": true
   },
   {
+    "name": "az-scout-plugin-compare-cost-between-regions",
+    "description": "Compare Azure costs between regions using Cost Management exports.",
+    "long_description": "This plugin lets users upload Enterprise Agreement billing exports (Detail Enrollment CSV and PriceSheet ZIP) to analyze usage costs per SKU in a source region and estimate what the same workload would cost in a different Azure region. Features include 2-step SKU matching with UoM normalization, BasePrice disambiguation, ARM-to-MeterRegion mapping for 65+ regions, sortable tables, and CSV export.",
+    "source": "pypi",
+    "repository": "https://github.com/az-scout/az-scout-plugin-compare-cost-between-regions",
+    "authors": ["lrivallain"],
+    "tags": ["cost", "regions", "billing", "pricing"],
+    "audit": true
+  },
+  {
     "name": "az-scout-plugin-latency-stats",
     "description": "Inter-region latency statistics with D3.js graph visualization.",
     "long_description": "This plugin provides inter-region latency statistics and visualizes them using D3.js graphs. It helps users understand network performance between different regions, aiding in the optimization of multi-region deployments. It also provides inter-AZ latency statistics for a more granular view of network performance within regions.",
