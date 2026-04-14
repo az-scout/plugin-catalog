@@ -50,6 +50,16 @@
     "audit": true
   },
   {
+    "name": "az-scout-plugin-network-cost",
+    "description": "Azure VNet peering cost estimation between regions.",
+    "long_description": "This plugin estimates Azure VNet peering costs between two regions using live pricing from the Azure Retail Prices API. It supports global and same-region peering with bidirectional traffic breakdown, automatic billing zone detection, and per-direction cost analysis. Features include a UI tab with region selectors and summary cards, an API endpoint for programmatic estimates, and an MCP tool for AI chat integration.",
+    "source": "pypi",
+    "repository": "https://github.com/az-scout/az-scout-plugin-network-cost",
+    "authors": ["rsabile"],
+    "tags": ["network", "peering", "cost", "vnet"],
+    "audit": true
+  },
+  {
     "name": "az-scout-plugin-odcr-coverage",
     "description": "ODCR coverage analysis — identify VMs at risk of allocation failure.",
     "long_description": "This plugin provides ODCR (On-Demand Capacity Reservation) coverage analysis, helping users identify virtual machines (VMs) that are at risk of allocation failure due to insufficient capacity reservations. It helps to optimize resource allocation to prevent potential disruptions.",
