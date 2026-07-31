@@ -60,6 +60,22 @@
     "audit": true
   },
   {
+    "name": "az-scout-plugin-mana-supportability",
+    "description": "MANA supportability analysis.",
+    "long_description": "Best-effort MANA (Microsoft Azure Network Adapter) supportability risk assessment for Azure VMs.",
+    "source": "pypi",
+    "repository": "https://github.com/az-scout/az-scout-plugin-mana-supportability",
+    "authors": [
+      "lrivallain"
+    ],
+    "tags": [
+      "network",
+      "readiness",
+      "modernization"
+    ],
+    "audit": true
+  },
+  {
     "name": "az-scout-plugin-network-cost",
     "description": "Azure VNet peering cost estimation between regions.",
     "long_description": "This plugin estimates Azure VNet peering costs between two regions using live pricing from the Azure Retail Prices API. It supports global and same-region peering with bidirectional traffic breakdown, automatic billing zone detection, and per-direction cost analysis. Features include a UI tab with region selectors and summary cards, an API endpoint for programmatic estimates, and an MCP tool for AI chat integration.",
@@ -80,22 +96,6 @@
     "audit": true
   },
   {
-    "name": "az-scout-plugin-mana-supportability",
-    "description": "MANA supportability analysis.",
-    "long_description": "Best-effort MANA (Microsoft Azure Network Adapter) supportability risk assessment for Azure VMs.",
-    "source": "pypi",
-    "repository": "https://github.com/az-scout/az-scout-plugin-mana-supportability",
-    "authors": [
-      "lrivallain"
-    ],
-    "tags": [
-      "network",
-      "readiness",
-      "modernization"
-    ],
-    "audit": true
-  },
-  {
     "name": "az-scout-plugin-regions-cheapest",
     "description": "Find the cheapest Azure regions for a given VM SKU.",
     "long_description": "This plugin helps users identify the cheapest Azure regions for a specific VM SKU. By analyzing pricing data across different regions, it provides insights into cost-effective deployment options, enabling users to optimize their cloud spending while meeting their performance and availability requirements.",
@@ -113,22 +113,6 @@
     "repository": "https://github.com/az-scout/az-scout-plugin-strategy-advisor",
     "authors": ["rsabile", "lrivallain"],
     "tags": ["strategy", "capacity", "WIP"],
-    "audit": true
-  },
-  {
-    "name": "az-scout-plugin-mana-supportability",
-    "description": "MANA supportability analysis.",
-    "long_description": "Best-effort MANA (Microsoft Azure Network Adapter) supportability risk assessment for Azure VMs.",
-    "source": "pypi",
-    "repository": "https://github.com/az-scout/az-scout-plugin-mana-supportability",
-    "authors": [
-      "lrivallain"
-    ],
-    "tags": [
-      "network",
-      "readiness",
-      "modernization"
-    ],
     "audit": true
   }
 ]
