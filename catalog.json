@@ -98,5 +98,21 @@
     "authors": ["rsabile", "lrivallain"],
     "tags": ["strategy", "capacity", "WIP"],
     "audit": true
+  },
+  {
+    "name": "az-scout-plugin-mana-supportability",
+    "description": "MANA supportability analysis.",
+    "long_description": "Best-effort MANA (Microsoft Azure Network Adapter) supportability risk assessment for Azure VMs.",
+    "source": "pypi",
+    "repository": "https://github.com/az-scout/az-scout-plugin-mana-supportability",
+    "authors": [
+      "lrivallain"
+    ],
+    "tags": [
+      "network",
+      "readiness",
+      "modernization"
+    ],
+    "audit": true
   }
 ]
